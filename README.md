@@ -1,3 +1,9 @@
+## Todo
+
+- [ ] Create docs
+- [ ] Create example
+- [ ] Finish test
+
 ### hapi-jwt
 
 #### Instalation
