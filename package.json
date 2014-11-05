@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/lvegerano/hapi-jwt",
   "devDependencies": {
-    "hapi": "^7.2.0"
+    "code": "^1.2.1",
+    "hapi": "^7.2.0",
+    "lab": "^5.0.1"
   }
 }
