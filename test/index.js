@@ -81,6 +81,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
+            console.log(res.result);
             expect(res.result).to.exist();
             expect(res.result).to.equal('ok');
             done();
@@ -92,13 +93,14 @@ describe('hapi-jwt', function() {
             method: 'POST',
             url: '/base',
             header: {
-                authorization: 'Something crazy'
+                authorization: 'Boom Bro!'
             }
         };
         server.inject(request, function(res) {
             expect(res.result).to.exist();
-            expect(res.statusCode).to.be.a.number();
-            expect(res.statusCode).to.equal(401);
+            expect(res.result.message).to.equals('Bearer');
+            expect(res.result.statusCode).to.be.a.number();
+            expect(res.result.statusCode).to.equal(401);
             done();
         });
     });
