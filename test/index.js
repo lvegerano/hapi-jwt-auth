@@ -97,6 +97,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
+            //console.log(res.result);
             expect(res.result).to.exist();
             expect(res.result.message).to.equals('Bearer');
             expect(res.result.statusCode).to.be.a.number();
