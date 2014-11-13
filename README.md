@@ -2,7 +2,7 @@
 
 - [ ] Create docs
 - [ ] Create example
-- [ ] Finish test
+- [x] Finish test
 
 ### hapi-jwt
 <!--
