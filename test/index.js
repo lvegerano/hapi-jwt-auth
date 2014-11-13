@@ -169,22 +169,6 @@ describe('hapi-jwt', function() {
         });
     });
 
-    it('should return a 401 code using bad token' , function(done) {
-        var request = {
-            method: 'POST',
-            url: '/base',
-            headers: {
-                authorization: header('luis') + 'X'
-            }
-        };
-        server.inject(request, function(res) {
-            expect(res.result).to.exist;
-            expect(res.result.message).to.be.equal('Bad authentication token');
-            expect(res.result.statusCode).to.equal(401);
-            done();
-        });
-    });
-
     it('should return decoded token if no validate function', function(done) {
         var handler = function (request, reply) {
             expect(request.auth.isAuthenticated).to.equal(true);
