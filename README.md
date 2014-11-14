@@ -5,11 +5,11 @@
 - [x] Finish test
 
 ### hapi-jwt
-<!--
+
 #### Instalation
 
-> npm install hapi-jwt --save
--->
+> npm install hapi-jwt-auth --save
+
 #### About plugin
 
 JSON Web Token (JWT) authentication plugin for [HapiJS](https://github.com/spumko/hapi)
