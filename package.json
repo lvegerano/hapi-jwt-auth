@@ -1,41 +1,41 @@
 {
-    "name": "hapi-jwt-auth",
-    "version": "0.1.1",
-    "description": "JSON Web token plugin for Hapi.js",
-    "main": "index.js",
-    "repository": {
+  "name": "hapi-jwt-auth",
+  "version": "0.1.2",
+  "description": "JSON Web token plugin for Hapi.js",
+  "main": "index.js",
+  "repository": {
     "type": "git",
     "url": "https://github.com/lvegerano/hapi-jwt.git"
-    },
-    "engines": {
-        "node": ">=0.10.33"
-    },
-    "scripts": {
-        "test": "node node_modules/lab/bin/lab -r html -o coverage.html"
-    },
-    "keywords": [
-        "jwt",
-        "json",
-        "web",
-        "token",
-        "token",
-        "hapijs",
-        "authentication"
-    ],
-    "author": "Luis Vegerano",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/lvegerano/hapi-jwt/issues"
-    },
-    "homepage": "https://github.com/lvegerano/hapi-jwt",
-    "devDependencies": {
-        "code": "^1.2.1",
-        "hapi": "^7.5.2",
-        "lab": "^5.0.1"
-    },
-        "dependencies": {
-        "boom": "^2.6.0",
-        "hoek": "^2.8.1",
-        "jsonwebtoken": "^1.1.2"
-    }
+  },
+  "engines": {
+    "node": ">=0.10.33"
+  },
+  "scripts": {
+    "test": "node node_modules/lab/bin/lab -r html -o coverage.html"
+  },
+  "keywords": [
+    "jwt",
+    "json",
+    "web",
+    "token",
+    "token",
+    "hapijs",
+    "authentication"
+  ],
+  "author": "Luis Vegerano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lvegerano/hapi-jwt/issues"
+  },
+  "homepage": "https://github.com/lvegerano/hapi-jwt",
+  "devDependencies": {
+    "code": "^1.2.1",
+    "hapi": "^7.5.2",
+    "lab": "^5.1.0"
+  },
+  "dependencies": {
+    "boom": "^2.6.1",
+    "hoek": "^2.9.0",
+    "jsonwebtoken": "^1.1.2"
+  }
 }
