@@ -2,6 +2,7 @@ var Lab = require('lab');
 var Hapi = require('hapi');
 var Hoek = require('hoek');
 var Code = require('code');
+var Boom = require('boom');
 var jwt = require('../');
 
 var internals = {};
@@ -49,26 +50,29 @@ describe('hapi-jwt', function() {
                 return callback(null, false, { user: 'invalid' });
             case 'badCredentials':
                 return callback(null, true, false);
+            case 'errValidate':
+                return callback('this err from validate', null, null);
             default:
-                return callback(Hapi.error.internal('boom'));
+                return callback(Boom.badImplementation());
         }
     };
 
-    var handler = function(req, rep) {
-        rep('ok');
+    var handler = function(request, reply) {
+        return reply('ok');
     };
 
     var server = new Hapi.Server({ debug: false });
+    server.connection();
     before(function(done) {
-        server.pack.register(require('../'), function(err) {
+        server.register(require('../'), function(err) {
             expect(err).to.not.exist();
-            server.auth.strategy('token', 'jwt', 'required', { validateFunc: validateUser });
+            server.auth.strategy('token', 'jwt', 'required', { validate: validateUser });
             server.route([
                 {
                     method: 'POST',
                     path: '/base',
+                    handler: handler,
                     config: {
-                        handler: handler,
                         auth: 'token'
                     }
                 }
@@ -77,7 +81,7 @@ describe('hapi-jwt', function() {
         });
     });
 
-    it('should return a reply on successful token verification', function(done) {
+    it('should reply on successful token verification', function(done) {
         var request = {
             method: 'POST',
             url: '/base',
@@ -86,7 +90,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result).to.equal('ok');
             done();
         });
@@ -101,7 +105,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.message).to.equals('Bad HTTP authentication header');
             expect(res.result.statusCode).to.equal(401);
             done();
@@ -115,8 +119,26 @@ describe('hapi-jwt', function() {
             headers: {}
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.statusCode).to.equal(401);
+            expect(res.result.message).to.equal('Missing authentication');
+            done();
+        });
+    });
+
+    it('should return a 401 code using empty header' , function(done) {
+        var request = {
+            method: 'POST',
+            url: '/base',
+            headers: {
+                authorization: '  '
+            }
+        };
+        server.inject(request, function(res) {
+            console.log(res.result);
+            //expect(res.result).to.exist();
+            //expect(res.result.message).to.be.equal('Bad HTTP authentication header format');
+            //expect(res.result.statusCode).to.equal(401);
             done();
         });
     });
@@ -130,7 +152,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.message).to.be.equal('Bad HTTP authentication header format');
             expect(res.result.statusCode).to.equal(401);
             done();
@@ -146,7 +168,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.message).to.be.equal('Token expired');
             expect(res.result.statusCode).to.equal(401);
             done();
@@ -162,7 +184,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.message).to.be.equal('Bad authentication token');
             expect(res.result.statusCode).to.equal(401);
             done();
@@ -172,11 +194,12 @@ describe('hapi-jwt', function() {
     it('should return decoded token if no validate function', function(done) {
         var handler = function (request, reply) {
             expect(request.auth.isAuthenticated).to.equal(true);
-            expect(request.auth.credentials).to.exist;
+            expect(request.auth.credentials).to.exist();
             reply('ok');
         };
         var server = new Hapi.Server({ debug: false });
-        server.pack.register(require('../'), function(err) {
+        server.connection();
+        server.register(require('../'), function(err) {
             expect(err).to.not.exist();
             server.auth.strategy('token', 'jwt', 'required');
             server.route({
@@ -197,7 +220,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result).to.equals('ok');
             done();
         });
@@ -212,7 +235,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.message).to.equal('Invalid token');
             expect(res.result.statusCode).to.equal(401);
             done();
@@ -228,7 +251,7 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.statusCode).to.equal(500);
             done();
         });
@@ -243,10 +266,11 @@ describe('hapi-jwt', function() {
             }
         };
         server.inject(request, function(res) {
-            expect(res.result).to.exist;
+            expect(res.result).to.exist();
             expect(res.result.statusCode).to.equal(500);
             done();
         });
     });
+
 });
 
