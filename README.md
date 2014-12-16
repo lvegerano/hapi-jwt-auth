@@ -5,6 +5,8 @@
 - [x] Finish test
 
 ### hapi-jwt
+[![Build Status](https://travis-ci.org/lvegerano/hapi-jwt-auth.svg?branch=master)]
+(https://travis-ci.org/lvegerano/hapi-jwt-auth)
 
 #### Instalation
 
