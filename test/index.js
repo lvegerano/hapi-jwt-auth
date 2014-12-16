@@ -131,14 +131,13 @@ describe('hapi-jwt', function() {
             method: 'POST',
             url: '/base',
             headers: {
-                authorization: '  '
+                authorization: ' '
             }
         };
         server.inject(request, function(res) {
-            console.log(res.result);
-            //expect(res.result).to.exist();
-            //expect(res.result.message).to.be.equal('Bad HTTP authentication header format');
-            //expect(res.result.statusCode).to.equal(401);
+            expect(res.result).to.exist();
+            expect(res.result.message).to.be.equal('Bad HTTP authentication header');
+            expect(res.result.statusCode).to.equal(401);
             done();
         });
     });
@@ -191,6 +190,22 @@ describe('hapi-jwt', function() {
         });
     });
 
+    it('should return a 401 code on invalidated user', function(done) {
+        var request = {
+            method: 'POST',
+            url: '/base',
+            headers: {
+                authorization: header('invalid')
+            }
+        };
+        server.inject(request, function(res) {
+            expect(res.result).to.exist();
+            expect(res.result.message).to.equal('Invalid token');
+            expect(res.result.statusCode).to.equal(401);
+            done();
+        });
+    });
+
     it('should return decoded token if no validate function', function(done) {
         var handler = function (request, reply) {
             expect(request.auth.isAuthenticated).to.equal(true);
@@ -226,21 +241,6 @@ describe('hapi-jwt', function() {
         });
     });
 
-    it('should return a 401 code on invalidated user', function(done) {
-        var request = {
-            method: 'POST',
-            url: '/base',
-            headers: {
-                authorization: header('invalid')
-            }
-        };
-        server.inject(request, function(res) {
-            expect(res.result).to.exist();
-            expect(res.result.message).to.equal('Invalid token');
-            expect(res.result.statusCode).to.equal(401);
-            done();
-        });
-    });
 
     it('should return a 500 code when validate function returns bad credentials', function(done) {
         var request = {
