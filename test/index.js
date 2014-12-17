@@ -1,11 +1,8 @@
 var Lab = require('lab');
 var Hapi = require('hapi');
-var Hoek = require('hoek');
 var Code = require('code');
 var Boom = require('boom');
 var jwt = require('../');
-
-var internals = {};
 
 // test shortcuts
 var lab = exports.lab = Lab.script();
@@ -240,7 +237,6 @@ describe('hapi-jwt', function() {
             done();
         });
     });
-
 
     it('should return a 500 code when validate function returns bad credentials', function(done) {
         var request = {

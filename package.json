@@ -40,5 +40,8 @@
   },
   "peerDependencies" : {
     "hapi": ">=8.x.x"
+  },
+  "scripts": {
+    "test": "make test-cov"
   }
 }
