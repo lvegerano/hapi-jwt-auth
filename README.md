@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/lvegerano/hapi-jwt-auth.svg?branch=master)]
 (https://travis-ci.org/lvegerano/hapi-jwt-auth)
 
+[![Coverage Status](https://coveralls.io/repos/lvegerano/hapi-jwt-auth/badge.png)](https://coveralls.io/r/lvegerano/hapi-jwt-auth)
+
 #### Installation
 
 > npm install hapi-jwt-auth --save
