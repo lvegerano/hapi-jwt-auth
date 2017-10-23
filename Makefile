@@ -1,8 +1,8 @@
 test:
-	@node node_modules/lab/bin/lab -a code
+	@node node_modules/lab/bin/lab -r console
 test-cov:
-	@node node_modules/lab/bin/lab -a code -t 100 -r lcov
+	@node node_modules/lab/bin/lab -t 100 -r console
 test-cov-html:
-	@node node_modules/lab/bin/lab -a code -r html -o coverage.html
+	@node node_modules/lab/bin/lab -r html -o coverage.html
 .PHONY:
 	test test-cov test-cov-html

@@ -1,12 +1,11 @@
 var Lab = require('lab');
 var Hapi = require('hapi');
-var Code = require('code');
 var Boom = require('boom');
 var jwt = require('../');
 
 // test shortcuts
 var lab = exports.lab = Lab.script();
-var expect = Code.expect;
+var expect = lab.expect;
 var before = lab.before;
 var describe = lab.describe;
 var it = lab.it;
@@ -160,7 +159,7 @@ describe('hapi-jwt', function() {
             method: 'POST',
             url: '/base',
             headers: {
-                authorization: header('luis', { expiresInMinutes: -1 })
+                authorization: header('luis', { expiresIn: -1 })
             }
         };
         server.inject(request, function(res) {
@@ -203,7 +202,7 @@ describe('hapi-jwt', function() {
         });
     });
 
-    it('should return decoded token if no validate function', function(done) {
+    it.only('should return decoded token if no validate function', function(done) {
         var handler = function (request, reply) {
             expect(request.auth.isAuthenticated).to.equal(true);
             expect(request.auth.credentials).to.exist();
