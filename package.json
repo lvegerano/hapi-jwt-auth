@@ -38,6 +38,6 @@
     "jsonwebtoken": "^8.1.0"
   },
   "peerDependencies": {
-    "hapi": ">=8.x.x"
+    "hapi": ">=8.x.x || <=16.x.x"
   }
 }
