@@ -17,8 +17,7 @@ Inspired by [hapi-auth-jsonwebtoken by boketto](https://github.com/boketto/hapi-
 This plugin will validate a signed token in the bearer header.
 
 ### Setup
-You will have to register the plugin with your server object, then create a new (server auth strategy)
-[http://hapijs.com/api#serverauthstrategyname-scheme-mode-options]. Validation will occur only on routes that require
+You will have to register the plugin with your server object, then create a new [server auth strategy](http://hapijs.com/api#serverauthstrategyname-scheme-mode-options). Validation will occur only on routes that require
 authorization.
 
 ### Options
