@@ -17,9 +17,9 @@ const {
   before,
 } = lab;
 
-const header = (username, options) => {
+const header = (username, options, server) => {
   options = options || {};
-  return `Bearer ${jwt.sign({ username }, privateKey, options)}`;
+  return `Bearer ${server.methods.sign({ username }, privateKey, options)}`;
 };
 
 const validateUser = (token, decoded, callback) => {
@@ -42,12 +42,12 @@ const handler = (request, reply) => {
   return reply('ok');
 };
 
-const getRequest = (headerType) => {
+const getRequest = (headerType, server) => {
   return {
     method: 'POST',
     url: '/base',
     headers: {
-      authorization: header(headerType),
+      authorization: header(headerType, null, server),
     },
   };
 };
@@ -94,7 +94,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('replies on sucessful token verification', (done) => {
-      server.inject(getRequest('luis'), (res) => {
+      server.inject(getRequest('luis', server), (res) => {
         expect(res.result).to.exists();
         expect(res.result).to.equal('ok');
         done();
@@ -102,7 +102,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 when using a bad header', (done) => {
-      const request = getRequest();
+      const request = getRequest(null, server);
       request.headers.authorization = 'Booooyakasha!!!';
       server.inject(request, (res) => {
         expect(res.result).to.exists();
@@ -113,7 +113,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 when missing auth header', (done) => {
-      const request = getRequest();
+      const request = getRequest(null, server);
       request.headers = {};
 
       server.inject(request, (res) => {
@@ -125,7 +125,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 when auth header is empty', (done) => {
-      const request = getRequest();
+      const request = getRequest(null , server);
       request.headers.authorization = ' ';
 
       server.inject(request, (res) => {
@@ -137,7 +137,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 when using bad header format', (done) => {
-      const request = getRequest();
+      const request = getRequest(null, server);
       request.headers.authorization += ' cool story bro';
 
       server.inject(request, (res) => {
@@ -149,8 +149,8 @@ experiment('hapi-jwt', () => {
     });
 
     test('should return a 401 when token is expired', (done) => {
-      const request = getRequest();
-      request.headers.authorization = header('luis', {expiresIn: -1});
+      const request = getRequest(null, server);
+      request.headers.authorization = header('luis', {expiresIn: -1}, server);
 
       server.inject(request, (res) => {
         expect(res.result).to.exist();
@@ -161,7 +161,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 when using a bad token', (done) => {
-      const request = getRequest();
+      const request = getRequest(null, server);
       request.headers.authorization += 'X';
 
       server.inject(request, (res) => {
@@ -173,7 +173,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 401 with an invalid user', (done) => {
-      server.inject(getRequest('invalid'), (res) => {
+      server.inject(getRequest('invalid', server), (res) => {
         expect(res.result).to.exist();
         expect(res.result.message).to.equal('Invalid token');
         expect(res.result.statusCode).to.equal(401);
@@ -195,7 +195,7 @@ experiment('hapi-jwt', () => {
             auth: 'token',
           }
         });
-        server.inject(getRequest('luis'), function (res) {
+        server.inject(getRequest('luis', server), (res) => {
           expect(res.result, 'Has a result').to.exist();
           expect(res.result, 'Responded Ok').to.equals('ok');
           done();
@@ -204,7 +204,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns a 500 code when the validate function returns a bad credential', (done) => {
-      server.inject(getRequest('badCredentials'), (res) => {
+      server.inject(getRequest('badCredentials', server), (res) => {
         expect(res.result).to.exist();
         expect(res.result.statusCode).to.equal(500);
         done();
@@ -212,7 +212,7 @@ experiment('hapi-jwt', () => {
     });
 
     test('returns error on an internal error', (done) => {
-      server.inject(getRequest('error'), function (res) {
+      server.inject(getRequest('error', server), function (res) {
         expect(res.result).to.exist();
         expect(res.result.statusCode).to.equal(500);
         done();
