@@ -19,7 +19,7 @@ const {
 
 const header = (username, options, server) => {
   options = options || {};
-  return `Bearer ${server.methods.sign({ username }, privateKey, options)}`;
+  return `Bearer ${server.methods.sign({ username }, options, privateKey)}`;
 };
 
 const validateUser = (token, decoded, callback) => {
@@ -56,7 +56,7 @@ experiment('hapi-jwt', () => {
 
   suite('jwt functions', () => {
 
-    const token = jwt.sign({foo: 'bar'}, privateKey);
+    const token = jwt.sign({foo: 'bar'}, {}, privateKey);
 
     test('it returns signed token', (done) => {
       expect(token).to.be.a.string();
@@ -80,7 +80,10 @@ experiment('hapi-jwt', () => {
       server.connection();
       server.register(require('../'), (err) => {
         Hoek.assert(!err);
-        server.auth.strategy('token', 'jwt', 'required', { validate: validateUser });
+        server.auth.strategy('token', 'jwt', 'required', {
+          validate: validateUser,
+          key: privateKey,
+        });
         server.route({
           method: 'POST',
           path: '/base',
@@ -186,7 +189,7 @@ experiment('hapi-jwt', () => {
       server.connection();
       server.register(require('../'), (err) => {
         Hoek.assert(!err);
-        server.auth.strategy('token', 'jwt', 'required');
+        server.auth.strategy('token', 'jwt', 'required', { key: privateKey });
         server.route({
           method: 'POST',
           path: '/base',
